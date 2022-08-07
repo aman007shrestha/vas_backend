@@ -15,7 +15,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-// Routings
 app.get("/", (req: Request, res: Response) => {
   res.send(`
   API IS UP AND RUNNING

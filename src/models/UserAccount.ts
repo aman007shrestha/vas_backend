@@ -30,11 +30,42 @@ class UserAccount {
     return newUser;
   }
 
+  /**
+   *
+   * @param email email upon which user object is to be queried
+   * @returns
+   */
   public static async getUserByEmail(email: string): Promise<User> {
     const user = await db(UserAccount.table)
       .where({ email: email })
       .select()
       .first();
+    return user;
+  }
+
+  /**
+   *
+   * @desc set user registration to true
+   * @returns
+   */
+  public static async setRegistration(email: string) {
+    const user = await db(UserAccount.table)
+      .where({ email })
+      .update({ is_registered: true })
+      .returning(["id", "email", "is_registered", "is_admin"]);
+    return user;
+  }
+
+  /**
+   *
+   * @desc set user registration to false
+   * @returns
+   */
+  public static async unSetRegistration(email: string) {
+    const user = await db(UserAccount.table)
+      .where({ email })
+      .update({ is_registered: false })
+      .returning(["id", "email", "is_registered", "is_admin"]);
     return user;
   }
 

@@ -4,6 +4,7 @@ import User, { UserToInsert } from "../domain/User";
 import bcrypt from "bcrypt";
 import UserModel from "../models/UserAccount";
 import { generateToken } from "../utils/utils";
+import logger from "../misc/logger";
 
 /**
  *
@@ -13,6 +14,7 @@ import { generateToken } from "../utils/utils";
 export const createUser = async (
   user: UserToInsert
 ): Promise<Success<User>> => {
+  logger.info(`Registrating ${user.email}`);
   const { password } = user;
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
@@ -34,6 +36,7 @@ export const createUser = async (
 export const loginService = async (
   user: UserToInsert
 ): Promise<Success<ILoginSuccess>> => {
+  logger.info(`Logging ${user.email}`);
   const { email, password } = user;
   const existingUser = await UserModel.getUserByEmail(email);
   // Search user by email, if false invalid credential
