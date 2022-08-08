@@ -4,15 +4,14 @@ import jwt from "jsonwebtoken";
 import CustomError from "../misc/CustomError";
 import UserModel from "../models/UserAccount";
 import { DataStoredInToken } from "../domain/Token";
+import { RequestWithUser } from "../domain/CustomRequest";
 
 const checkAccess = async (
-  req: Request,
+  req: RequestWithUser,
   res: Response,
   isAdminCheck: boolean,
   next: NextFunction
 ) => {
-  console.log(isAdminCheck);
-
   let token;
   if (
     req.headers.authorization &&
@@ -20,7 +19,7 @@ const checkAccess = async (
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
-      const decoded: any = jwt.verify(
+      const decoded = jwt.verify(
         token,
         process.env.JWT_SECRET as string
       ) as DataStoredInToken;
@@ -28,6 +27,7 @@ const checkAccess = async (
       const currentUser = await UserModel.getUserById(id);
       if (currentUser) {
         // Check admin only access if isAdminCheck bool === true
+        req.user = currentUser;
         if (isAdminCheck) {
           if (!currentUser.is_admin) {
             next(

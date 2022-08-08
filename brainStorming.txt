@@ -1,0 +1,4 @@
+user_account id email password is_admin is_registered
+registration_table patient_id email firstName lastName gender ethnicity address paymentInfo user_id(fk)
+vaccination_table 
+appointment_table
